@@ -8,8 +8,32 @@
 
 void serial(Graph* g) {
     timer timer;
+    uint size = g->height;
 
-    return;
+    std::cout << "graph before >>>> " << std::endl;
+
+    g->printGraph();
+
+    timer.start();
+    for (int k = 0; k < size; k++) {
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                // std::cout << "i: " << i << ", k: " << k << " is " << g->getWeight(i,k) << std::endl;
+                // std::cout << "k: " << k << ", j: " << j << " is " << g->getWeight(k,j) << std::endl;
+                // std::cout << "i: " << i << ", j: " << j << " is " << g->getWeight(i,j) << std::endl;
+                int new_weight = g->getWeight(i,k) + g->getWeight(k,j);
+                if (g->getWeight(i,k) != INT_MAX && g->getWeight(k,j) != INT_MAX && new_weight < g->getWeight(i,j)) {
+                    g->setWeight(i,j, new_weight);
+                }
+            }
+        }
+    }
+    std::cout << "Time taken (in seconds) : " << std::setprecision(TIME_PRECISION)
+            << timer.stop() << "\n";
+    
+    std::cout << "graph after >>>> " << std::endl;
+
+    g->printGraph();
 }
 
 int main(int argc, char *argv[]) {

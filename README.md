@@ -2,7 +2,7 @@
 Parallel all pairs shortest path algorithm
 
 # Input Graph Data
-* to test the system, you would need to first generate the data you want and the expectation is that the graph is going to be weighted directed graph. For nodes that have no path from A -> B, the input file should represent the weight using a negative value means infinity. 
+* to test the system, you would need to first generate the data you want and the expectation is that the graph is going to be weighted directed/undirected graph. If there's no path from A -> B, then you should represent the weight as `i` which means infinity. 
 
 # Running locally
 

@@ -32,3 +32,4 @@
 *.app
 
 shortest_path_floyd
+.vscode

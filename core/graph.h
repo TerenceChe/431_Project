@@ -21,26 +21,39 @@ public:
     std::string line;
     while (std::getline(file, line)) {
       std::vector<int> row;
-      size_t pos = 0;
-      while ((pos = line.find(' ')) != std::string::npos) {
-        int token = std::stoi(line.substr(0, pos));
-        
-        if (token < 0) {
+
+      std::string currentNumber;
+
+      for (char c : line) {
+
+        if (std::isdigit(c)) {
+         currentNumber+= c;
+        } else if (c == 'i') {
           row.push_back(INT_MAX);
+          currentNumber.clear();
         } else {
-          row.push_back(token);
-        }
-        line.erase(0, pos + 1);
-      }
-      // when we get here, we can't find any more space but the line might not be empty, so we do this check here to get the last 
-      if (!line.empty()) {
-        int token = std::stoi(line);
-        if (token < 0) {
-          row.push_back(INT_MAX);
-        } else {
-          row.push_back(token);
+          if (!currentNumber.empty()) {
+           try {
+              row.push_back(std::stoi(currentNumber));
+              currentNumber.clear();
+            } catch (std::invalid_argument& e) {
+              std::cerr << "invalid data, exiting" << e.what() << std::endl;
+              exit(1);
+            }
+          }
         }
       }
+
+      if (!currentNumber.empty()) {
+           try {
+              row.push_back(std::stoi(currentNumber));
+              currentNumber.clear();
+            } catch (std::invalid_argument& e) {
+              std::cerr << "invalid data, exiting" << e.what() << std::endl;
+              exit(1);
+            }
+          }
+    
       matrix.push_back(row);
     }
     file.close();
@@ -57,7 +70,8 @@ public:
     }
     
     if (height != width) {
-      std::cerr << "height and width of matrix must be the same" << std::endl;
+      std::cerr << "height and width of matrix must be the same " << "height: " << height << "width: " << width << std::endl;
+      printGraph();
       exit(1);
     }
 
@@ -73,7 +87,7 @@ public:
     for (auto row : matrix) {
       for (auto weight : row) {
         if (weight == INT_MAX) {
-          std::cout << "inf ";
+          std::cout << "i ";
         } else {
           std::cout << weight << " ";
         }
@@ -84,6 +98,10 @@ public:
 
   int getWeight(uint from, uint to) {
     return matrix[from][to];
+  }
+
+  void setWeight(uint from, uint to, int value) {
+    matrix[from][to] = value;
   }
   
   ~Graph() {}
