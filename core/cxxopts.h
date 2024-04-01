@@ -719,7 +719,7 @@ public:
 
   size_t count() const noexcept { return m_count; }
 
-  // TODO: maybe default options should count towards the number of arguments
+  // maybe default options should count towards the number of arguments
   bool has_default() const noexcept { return m_default; }
 
   template <typename T> const T &as() const {

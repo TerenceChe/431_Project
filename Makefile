@@ -14,5 +14,7 @@ all : $(ALL)
 
 .PHONY : clean
 
+test: shortest_path_floyd.cpp shortest_path_floyd.h test.cpp
+	$(CXX) $(CXXFLAGS) test.cpp shortest_path_floyd.cpp -o test
 clean :
 	rm -f *.o *.obj $(ALL)
