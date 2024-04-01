@@ -42,22 +42,16 @@ void iterate(uint start_col, uint end_col, uint size, Graph *g, CustomBarrier *b
     timer t1;
     t1.start();
     for (int k = 1; k < size; k++) {
-        int tmp[size * end_col-start_col];
-        int idx = 0;
         for (int i = 0; i < size; i++) {
             for (int j = start_col; j < end_col; j++) {
-                tmp[idx] = g->getWeight(i, k) + g->getWeight(k, j);
-                idx++;
-            }
-        }
-        barrier->wait();
-        idx = 0;
-        for (int i = 0; i < size; i++) {
-            for (int j = start_col; j < end_col; j++) {
-                if (g->getWeight(i,k) != INT_MAX && g->getWeight(k,j) != INT_MAX && tmp[idx] < g->getWeight(i,j)) {
-                    g->setWeight(i,j, tmp[idx]);
+                // Infinite weight in one of the intermediate paths: not a real connection.
+                if (g->getWeight(i,k) == INT_MAX || g->getWeight(k,j) == INT_MAX) {
+                    continue;
                 }
-                idx++;
+                int new_weight = g->getWeight(i,k) + g->getWeight(k,j);
+                if (new_weight < g->getWeight(i,j)) {
+                    g->setWeight(i, j, new_weight);
+                }
             }
         }
         barrier->wait();
