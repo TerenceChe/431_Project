@@ -41,7 +41,7 @@ void serial(Graph* g) {
 void iterate(uint start_col, uint end_col, uint size, Graph *g, CustomBarrier *barrier, double *time_taken) {
     timer t1;
     t1.start();
-    for (int k = 1; k < size; k++) {
+    for (int k = 0; k < size; k++) {
         for (int i = 0; i < size; i++) {
             for (int j = start_col; j < end_col; j++) {
                 // Infinite weight in one of the intermediate paths: not a real connection.
