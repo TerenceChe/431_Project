@@ -82,6 +82,7 @@ void threaded(Graph *g, uint np) {
         }
         last_end = end_col;
 
+        // std::printf("Start: %d, end: %d\n", start_col, end_col);
         threads[i] = std::thread(iterate, start_col, end_col, size, g, &barrier, &times[i]);
     }
 
