@@ -1,7 +1,7 @@
 import random
 
 # How many nodes.
-N = 100
+N = 1000
 
 # 70% chance of writing i, 30% of writing a valid integer.
 # Returns a random string to write, either 'i' or some number like '123'.

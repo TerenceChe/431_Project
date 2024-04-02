@@ -14,7 +14,8 @@ int main(int argc, char *argv[]) {
     assert(g1 == g2); // Initially identical.
     serial(&g1);
     assert((g1 == g2) == false); // Serial updated g1 to be different.
-    int np = 10;
+    int np = 6; // Good number of processes to see speedup on my system.
     threaded(&g2, np);
     assert(g1 == g2); // Threaded updated g2 in the same way.
+    std::printf("All assertions passed\n");
 }
