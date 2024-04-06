@@ -32,3 +32,6 @@
 *.app
 
 .vscode
+distributed
+serial_threaded
+test_threaded

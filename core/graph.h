@@ -62,7 +62,7 @@ public:
         // Assert rectangular shape.
         height = matrix.size();
         if (height > 0) {
-            for (int i = 0; i < height - 1; i++) {
+            for (uint i = 0; i < height - 1; i++) {
                 if (matrix[i].size() != matrix[i+1].size()) {
                     std::cerr << "width must be the same in your matrix" << std::endl;
                     exit(1);
@@ -79,7 +79,7 @@ public:
         }
 
         // Assert 0 diagonal.
-        for (int i = 0; i < height; i++) {
+        for (uint i = 0; i < height; i++) {
             if (getWeight(i, i) != 0) {
                 std::cerr << "weight at: " << i << "," << i << " must be 0 " << std::endl;
                 exit(1);

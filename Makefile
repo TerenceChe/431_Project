@@ -1,16 +1,23 @@
-#compiler setup
-CXX = g++
-CXXFLAGS = -std=c++14 -O3 -pthread $(MACRO)
+CXXFLAGS = -std=c++14 -O3 -pthread -Wall -g
 
 .PHONY : clean
 
-all: main test
+all: serial_threaded test_threaded distributed
 
-main: shortest_path_floyd.cpp main.cpp
-	$(CXX) $(CXXFLAGS) -DPRINT=1 main.cpp shortest_path_floyd.cpp -o main.out
+# Executable for running both serial and threaded floyd.
+serial_threaded: shortest_path_floyd.cpp driver_serial_threaded.cpp
+	g++ $(CXXFLAGS) -DPRINT=1 \
+	driver_serial_threaded.cpp shortest_path_floyd.cpp -o serial_threaded
 
-test: shortest_path_floyd.cpp test.cpp
-	$(CXX) $(CXXFLAGS) test.cpp shortest_path_floyd.cpp -o test.out
+# Executable for testing that the threaded floyd returns same
+# results as serial floyd.
+test_threaded: shortest_path_floyd.cpp test_threaded.cpp
+	g++ $(CXXFLAGS) test_threaded.cpp shortest_path_floyd.cpp -o test_threaded
+
+# Executable for running distribtued (MPI) version of floyd.
+distributed: shortest_path_floyd.cpp driver_distributed.cpp
+	mpic++ $(CXXFLAGS) \
+	driver_distributed.cpp shortest_path_floyd.cpp -o distributed
 
 clean :
-	rm -f *.o *.obj $(ALL)
+	rm serial_threaded test_threaded distribtued

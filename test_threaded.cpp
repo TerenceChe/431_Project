@@ -1,3 +1,6 @@
+// Test that the threaded implementation produces the same results as
+// the serial one.
+
 #include <assert.h>
 #include "shortest_path_floyd.h"
 

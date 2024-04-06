@@ -10,5 +10,6 @@
 
 void threaded(Graph *g, uint np);
 void serial(Graph* g);
+void distrib(Graph *g);
 
 #endif

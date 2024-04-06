@@ -1,3 +1,5 @@
+// Implementations of serial, threaded, and distributed algorithms.
+
 #include "shortest_path_floyd.h"
 
 void serial(Graph* g) {
@@ -10,12 +12,9 @@ void serial(Graph* g) {
     #endif
 
     timer.start();
-    for (int k = 0; k < size; k++) {
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                // std::cout << "i: " << i << ", k: " << k << " is " << g->getWeight(i,k) << std::endl;
-                // std::cout << "k: " << k << ", j: " << j << " is " << g->getWeight(k,j) << std::endl;
-                // std::cout << "i: " << i << ", j: " << j << " is " << g->getWeight(i,j) << std::endl;
+    for (uint k = 0; k < size; k++) {
+        for (uint i = 0; i < size; i++) {
+            for (uint j = 0; j < size; j++) {
                 int new_weight = g->getWeight(i,k) + g->getWeight(k,j);
                 if (g->getWeight(i,k) != INT_MAX && g->getWeight(k,j) != INT_MAX && new_weight < g->getWeight(i,j)) {
                     g->setWeight(i,j, new_weight);
@@ -35,9 +34,9 @@ void serial(Graph* g) {
 void iterate(uint start_col, uint end_col, uint size, Graph *g, CustomBarrier *barrier, double *time_taken) {
     timer t1;
     t1.start();
-    for (int k = 0; k < size; k++) {
-        for (int i = 0; i < size; i++) {
-            for (int j = start_col; j < end_col; j++) {
+    for (uint k = 0; k < size; k++) {
+        for (uint i = 0; i < size; i++) {
+            for (uint j = start_col; j < end_col; j++) {
                 // Infinite weight in one of the intermediate paths: not a real connection.
                 if (g->getWeight(i,k) == INT_MAX || g->getWeight(k,j) == INT_MAX) {
                     continue;
@@ -79,8 +78,6 @@ void threaded(Graph *g, uint np) {
             excess_cols--;
         }
         last_end = end_col;
-
-        // std::printf("Start: %d, end: %d\n", start_col, end_col);
         threads[i] = std::thread(iterate, start_col, end_col, size, g, &barrier, &times[i]);
     }
 
@@ -96,8 +93,12 @@ void threaded(Graph *g, uint np) {
     #endif
 
     std::cout << "Time taken (in seconds) : \n" << std::setprecision(TIME_PRECISION);
-    for (int i = 0; i < np; i++) {
+    for (uint i = 0; i < np; i++) {
         std::cout << i << ": "  << times[i] << "\n";
     }
     std::cout << "Overall: " << overall_time << '\n';
+}
+
+void distrib(Graph *g) {
+
 }
