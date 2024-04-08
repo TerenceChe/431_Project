@@ -1,10 +1,6 @@
-// !! Not part of Floyd-Warshall implementation !!
-
-// Demo: how to parallelize matrix file editing using a distributed system in MPI.
-
 // Process 0 is leader process and reads input file into matrix.
 // Then it sends submatrices (by column spits) to follower processes.
-// Follower processes apply some elementwise operation to the submatrices.
+// Follower processes update distances in submatrices using floyd algorithm.
 // Then follower processes send submatrices back to leader process.
 // The leader process combines the submatrices into a matrix and writes to output file.
 
@@ -13,11 +9,9 @@
 #include <mpi.h>
 #include "graph.h"
 #include "utils.h"
+#include "floyd_distrib.h"
 
-#define INPUT_FILE "input_graph/test_large_data.txt"
-#define OUTPUT_FILE "output_graph/combined.txt"
-
-int main() {
+void distrib(std::string input_file_path, std::string output_file_path) {
     MPI_Init(NULL, NULL);
 
     int world_rank;
@@ -30,7 +24,7 @@ int main() {
 
     if (world_rank == 0) {
         graph = new Graph();
-        graph->readGraphFromFile(INPUT_FILE);
+        graph->readGraphFromFile(input_file_path);
         num_verts = graph->getNumVerts();
     }
     
@@ -132,10 +126,9 @@ int main() {
 
     // Root writes combined to file.
     if (world_rank == 0) {
-        graph_vector_to_file(combined, OUTPUT_FILE);
+        graph_vector_to_file(combined, output_file_path);
         delete graph;
     }
     delete[] proc_buffer;
     MPI_Finalize();
-    return 0;
 }

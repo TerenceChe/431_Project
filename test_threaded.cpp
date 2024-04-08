@@ -2,7 +2,7 @@
 // the serial one.
 
 #include <assert.h>
-#include "shortest_path_floyd.h"
+#include "floyd_serial_threaded.h"
 #include "core/cxxopts.h"
 
 

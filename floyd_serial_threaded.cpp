@@ -1,6 +1,6 @@
-// Implementations of serial, threaded, and distributed algorithms.
+// Implementations of serial and threaded algorithms.
 
-#include "shortest_path_floyd.h"
+#include "floyd_serial_threaded.h"
 #include "utils.h"
 #include <thread>
 
@@ -89,8 +89,4 @@ void threaded(Graph *g, uint np) {
         std::cout << i << ": "  << times[i] << "\n";
     }
     std::cout << "Overall: " << overall_time << '\n';
-}
-
-void distrib(Graph *g) {
-
 }

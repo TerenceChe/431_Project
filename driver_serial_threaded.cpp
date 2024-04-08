@@ -1,6 +1,6 @@
 // Driver to run serial and threaded implementations.
 
-#include "shortest_path_floyd.h"
+#include "floyd_serial_threaded.h"
 #include "core/cxxopts.h"
 
 #define DEFAULT_MODE "0"
@@ -14,15 +14,15 @@ int main(int argc, char *argv[]) {
     options.add_options(
         "",
         {
-            { "mode", "a number repesenting the mode, 0 - serial, 1 - threads, 2 - MPI",
+            { "mode", "a number repesenting the mode, 0 - serial, 1 - threads",
                 cxxopts::value<uint>()->default_value(DEFAULT_MODE)},
             {"np", "number of threads of processes, default is 1 for default mode",
-            cxxopts::value<uint>()->default_value(DEFAULT_NUMBER_N)},
+                cxxopts::value<uint>()->default_value(DEFAULT_NUMBER_N)},
             {"inputFile", "Input graph file path",
-            cxxopts::value<std::string>()->default_value(
+                cxxopts::value<std::string>()->default_value(
                 "./input_graph/test_data_1.txt")},
-            {"outputFile", "Ouput graph file path",
-            cxxopts::value<std::string>()->default_value(
+            {"outputFile", "Output graph file path",
+                cxxopts::value<std::string>()->default_value(
                 "./output_graph/test_data_1.txt")},
         });
 

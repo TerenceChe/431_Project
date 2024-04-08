@@ -32,7 +32,7 @@
 *.app
 floyd_serial_threaded
 test_threaded
-floyd_distributed
+floyd_distrib
 distributed_graph_edit
 
 .vscode

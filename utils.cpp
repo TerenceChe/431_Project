@@ -1,3 +1,4 @@
+#include <climits>
 #include "utils.h"
 
 void CustomBarrier::wait() {
@@ -44,7 +45,11 @@ void graph_vector_to_file(const std::vector<std::vector<int>> matrix, std::strin
     if (outfile.is_open()) {
     for (int i = 0; i < num_verts; i++) {
         for (int j = 0; j < num_verts; j++) {
-            outfile << matrix[i][j] << " ";
+            if (matrix[i][j] == INT_MAX) {
+                outfile << "i" << " ";
+            } else {
+                outfile << matrix[i][j] << " ";
+            }
         }
         outfile << "\n";
     }

@@ -1,6 +1,6 @@
 // Driver to run distributed implementation (MPI).
 
-#include "shortest_path_floyd.h"
+#include "floyd_distrib.h"
 #include "core/cxxopts.h"
 
 int main(int argc, char **argv) {
@@ -12,16 +12,17 @@ int main(int argc, char **argv) {
         "",
         {
             {"inputFile", "Input graph file path",
-            cxxopts::value<std::string>()->default_value(
+                cxxopts::value<std::string>()->default_value(
                 "./input_graph/test_data_1.txt")},
+            {"outputFile", "Output graph file path",
+                cxxopts::value<std::string>()->default_value(
+                "./output_graph/test_data_1.txt")},
         });
 
     auto cl_options = options.parse(argc, argv);
     std::string input_file_path = cl_options["inputFile"].as<std::string>();
+    std::string output_file_path = cl_options["outputFile"].as<std::string>();
     
-    Graph g; 
-    g.readGraphFromFile(input_file_path);
-
-    distrib(&g);
+    distrib(input_file_path, output_file_path);
     return 0;
 }
