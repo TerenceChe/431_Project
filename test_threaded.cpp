@@ -3,10 +3,24 @@
 
 #include <assert.h>
 #include "shortest_path_floyd.h"
+#include "core/cxxopts.h"
+
 
 int main(int argc, char *argv[]) {
-    assert(argc == 2); // Need to pass input_graph.txt as second argument.
-    std::string input_file_path = argv[1];
+     cxxopts::Options options(
+        "all pairs shortest path",
+        "gets the shortest path for all pairs in the graph");
+    
+    options.add_options(
+        "",
+        {
+            {"inputFile", "Input graph file path",
+            cxxopts::value<std::string>()->default_value(
+                "./input_graph/random_graph.txt")},
+        });
+    
+    auto cl_options = options.parse(argc, argv);
+    std::string input_file_path = cl_options["inputFile"].as<std::string>();
     
     Graph g1; 
     g1.readGraphFromFile(input_file_path);
