@@ -1,7 +1,7 @@
 // Implementations of serial, threaded, and distributed algorithms.
 
 #include "shortest_path_floyd.h"
-#include "core/utils.h"
+#include "utils.h"
 #include <thread>
 
 void serial(Graph* g) {

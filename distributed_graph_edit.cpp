@@ -9,11 +9,13 @@
 // The leader process combines the submatrices into a matrix and writes to output file.
 
 #include <iostream>
+#include <vector>
 #include <mpi.h>
-#include "core/graph.h"
-#include "core/utils.h"
+#include "graph.h"
+#include "utils.h"
 
 #define INPUT_FILE "input_graph/test_large_data.txt"
+#define OUTPUT_FILE "output_graph/combined.txt"
 
 int main() {
     MPI_Init(NULL, NULL);
@@ -74,22 +76,22 @@ int main() {
         MPI_Recv(proc_buffer, buffer_len, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
     }
     
+    // Verify contents of proc_buffer:
     // std::printf("Proc %d:\n", world_rank);
     // for (int i = 0; i < buffer_len; i++) {
     //     std::printf("%d ", proc_buffer[i]);
     // }
     // std::printf("\n");
 
-    // TODO: 
-    // 1. Perform operation (for now do no operation to check if 
+    // Perform operation (for now do no operation to check if 
     // able to get back original) on proc_buffer elements.
     
-    // 2. Send proc_buffer back to root, and root combines proc_buffers into `combined`.
-    int *combined = NULL;
+    // Send proc_buffer back to root, and root combines proc_buffers into `combined`.
+    std::vector<std::vector<int>> combined;
     if (world_rank != 0) {
         MPI_Send(proc_buffer, buffer_len, MPI_INT, 0, 0, MPI_COMM_WORLD);
     } else { // Proc 0.
-        combined = new int[num_verts * num_verts];
+        combined.resize(num_verts, std::vector<int>(num_verts));
         // Write proc 0 data into combined:
         int start_col = col_bounds[0];
         int end_col = col_bounds[1];
@@ -98,7 +100,7 @@ int main() {
             for (int j = 0; j < width; j++) {
                 int weight = proc_buffer[i * width + j];
                 int j_combined = start_col + j;
-                combined[i * num_verts + j_combined] = weight;
+                combined[i][j_combined] = weight;
             }
         }
 
@@ -120,7 +122,7 @@ int main() {
                 for (int j = 0; j < recv_buffer_width; j++) {
                     int weight = recv_buffer[i * recv_buffer_width + j];
                     int j_combined = start_col + j;
-                    combined[i * num_verts + j_combined] = weight;
+                    combined[i][j_combined] = weight;
                 }
             }
 
@@ -128,15 +130,10 @@ int main() {
         }
     }
 
-    // 3. Root writes combined to file.
+    // Root writes combined to file.
     if (world_rank == 0) {
-        for (int i = 0; i < num_verts; i++) {
-            for (int j = 0; j < num_verts; j++) {
-                std::printf("%d ", combined[i * num_verts + j]);
-            }
-            std::printf("\n");
-        }
-        delete[] combined;
+        graph_vector_to_file(combined, OUTPUT_FILE);
+        delete graph;
     }
     delete[] proc_buffer;
     MPI_Finalize();

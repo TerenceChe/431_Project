@@ -36,3 +36,4 @@ floyd_distributed
 distributed_graph_edit
 
 .vscode
+output_graph/*

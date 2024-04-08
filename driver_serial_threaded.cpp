@@ -21,6 +21,9 @@ int main(int argc, char *argv[]) {
             {"inputFile", "Input graph file path",
             cxxopts::value<std::string>()->default_value(
                 "./input_graph/test_data_1.txt")},
+            {"outputFile", "Ouput graph file path",
+            cxxopts::value<std::string>()->default_value(
+                "./output_graph/test_data_1.txt")},
         });
 
     std::map<uint, std::string> mode_map = {
@@ -32,6 +35,7 @@ int main(int argc, char *argv[]) {
     uint mode = cl_options["mode"].as<uint>();
     uint np = cl_options["np"].as<uint>();
     std::string input_file_path = cl_options["inputFile"].as<std::string>();
+    std::string output_file_path = cl_options["outputFile"].as<std::string>();
 
     if (mode < 0 || mode > 1) {
         std::cout << "invalid mode" << std::endl;
@@ -58,6 +62,8 @@ int main(int argc, char *argv[]) {
     if (mode == 1) {
         threaded(&g, np);
     }
+
+    g.writeGraphToFile(output_file_path);
 
     return 0;
 }
