@@ -138,6 +138,12 @@ public:
     }
   
     ~Graph() {}
+
+    // TODO:
+    // 1. Add method to read graph from 2D vector.
+    // 2. Add method which takes from and to, and assuming that 
+    // matrix is a complete distance matrix now, prints the optimal path.
+    // 3. Add method to write graph to file.
 };
 
 #endif
