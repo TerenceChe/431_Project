@@ -30,8 +30,9 @@
 *.exe
 *.out
 *.app
+floyd_serial_threaded
+test_threaded
+floyd_distributed
+distributed_graph_edit
 
 .vscode
-distributed
-serial_threaded
-test_threaded

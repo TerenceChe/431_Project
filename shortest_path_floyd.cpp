@@ -1,10 +1,12 @@
 // Implementations of serial, threaded, and distributed algorithms.
 
 #include "shortest_path_floyd.h"
+#include "core/utils.h"
+#include <thread>
 
 void serial(Graph* g) {
     timer timer;
-    uint size = g->height;
+    uint size = g->getNumVerts();
 
     #ifdef PRINT
     std::cout << "graph before >>>> " << std::endl;
@@ -62,23 +64,13 @@ void threaded(Graph *g, uint np) {
     #endif
     
     CustomBarrier barrier(np);
-    uint size = g->height;
-    uint col_per_thread = (uint) (size / np);
-    uint excess_cols = (uint) (size % np);
+    uint size = g->getNumVerts();
     double times[np] = { 0 };
-
     std::thread threads[np];
+    std::vector<int> col_bounds = get_col_bounds(size, np);
 
-    uint last_end = 0;
     for (uint i = 0; i < np; i++) {
-        uint start_col = last_end;
-        uint end_col = start_col + col_per_thread;
-        if (excess_cols > 0) {
-            end_col++;
-            excess_cols--;
-        }
-        last_end = end_col;
-        threads[i] = std::thread(iterate, start_col, end_col, size, g, &barrier, &times[i]);
+        threads[i] = std::thread(iterate, col_bounds[i], col_bounds[i + 1], size, g, &barrier, &times[i]);
     }
 
     for (uint i = 0; i < np; i++) {

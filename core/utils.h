@@ -1,13 +1,14 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#include "cxxopts.h"
-#include "get_time.h"
 #include <atomic>
 #include <condition_variable>
 #include <iostream>
-#include <limits.h>
 #include <mutex>
+#include <vector>
+#include <limits.h>
+#include "get_time.h"
+#include "cxxopts.h"
 
 #define intV int32_t
 #define uintV int32_t
@@ -50,5 +51,29 @@ struct CustomBarrier {
     //  Condition has been reached. return
   }
 };
+
+// Returns a vector with column splits.
+// E.g. 8 columns, 4 procs => [0, 2, 4, 6, 8].
+std::vector<int> get_col_bounds(uint num_cols, uint num_procs) {
+    std::vector<int> col_bounds;
+    col_bounds.push_back(0);
+
+    uint col_per_thread = (uint) (num_cols / num_procs);
+    uint excess_cols = (uint) (num_cols % num_procs);
+
+    uint last_end = 0;
+    for (uint i = 0; i < num_procs; i++) {
+        uint start_col = last_end; // Inclusive bound.
+        uint end_col = start_col + col_per_thread; // Not an inclusive bound.
+        if (excess_cols > 0) {
+            end_col++;
+            excess_cols--;
+        }
+        last_end = end_col;
+        col_bounds.push_back(end_col);
+    }
+
+    return col_bounds;
+}
 
 #endif

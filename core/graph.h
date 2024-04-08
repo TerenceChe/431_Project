@@ -1,16 +1,22 @@
+#ifndef GRAPH_H
+#define GRAPH_H
+
 #include <fstream>
 #include <iostream>
+#include <vector>
+#include <climits>
 
 class Graph {
     std::vector<std::vector<int>> matrix;
+    uint num_verts = -1;
 
 public:
-    uint height;
-    uint width;
-
     Graph() = default;
 
     void readGraphFromFile(std::string input_file_path) {
+        uint width = -1;
+        uint height = -1;
+
         std::ifstream file(input_file_path);
 
         if (!file.is_open()) {
@@ -78,6 +84,8 @@ public:
             exit(1);
         }
 
+        num_verts = height; // Could have written num_verts = width, since they are equal.
+
         // Assert 0 diagonal.
         for (uint i = 0; i < height; i++) {
             if (getWeight(i, i) != 0) {
@@ -100,6 +108,10 @@ public:
         } 
     }
 
+    uint getNumVerts() const {
+        return num_verts;
+    }
+
     int getWeight(uint from, uint to) {
         return matrix[from][to];
     }
@@ -111,12 +123,12 @@ public:
     // Check if two distancematrices are identical.
     bool operator==(const Graph& other) const {
         // Compare height and width:
-        if (height != other.height || width != other.width)
+        if (num_verts != other.getNumVerts())
             return false;
 
         // Compare matrix elements:
-        for (uint i = 0; i < height; ++i) {
-            for (uint j = 0; j < width; ++j) {
+        for (uint i = 0; i < num_verts; ++i) {
+            for (uint j = 0; j < num_verts; ++j) {
                 if (matrix[i][j] != other.matrix[i][j])
                     return false;
             }
@@ -127,3 +139,5 @@ public:
   
     ~Graph() {}
 };
+
+#endif
