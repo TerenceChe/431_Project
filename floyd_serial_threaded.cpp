@@ -39,8 +39,8 @@ void iterate(uint start_col, uint end_col, uint size, Graph *g, CustomBarrier *b
     for (uint k = 0; k < size; k++) {
         for (uint i = 0; i < size; i++) {
             for (uint j = start_col; j < end_col; j++) {
-                // Infinite weight in one of the intermediate paths: not a real connection.
                 if (g->getWeight(i,k) == INT_MAX || g->getWeight(k,j) == INT_MAX) {
+                    // Infinite weight in one of the intermediate paths: not a real connection.
                     continue;
                 }
                 int new_weight = g->getWeight(i,k) + g->getWeight(k,j);
