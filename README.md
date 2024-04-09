@@ -4,7 +4,7 @@ Parallel all pairs shortest path algorithm
 # Input Graph Data
 * to test the system, you would need to first generate the data you want and the expectation is that the graph is going to be weighted directed/undirected graph. If there's no path from A -> B, then you should represent the weight as `i` which means infinity. 
 
-For simplicity, we've created a python script called random_graphy.py which will allow you to create a graph of any size to test the program with, to generate input graphs, here's the command
+For simplicity, we've created a python script called random_graph.py which will allow you to create a graph of any size to test the program with, to generate input graphs, here's the command
 
 ```
 python3 input_graph/random_graph.py 100 ./input_graph/random_graph_100.txt
@@ -23,19 +23,3 @@ make all
 
 ```
 
-In order to run this inside slurm using 4 processes, you would use the following script file
-
-
-```
-#!/bin/bash
-#
-#SBATCH --cpus-per-task=1
-#SBATCH --nodes=1
-#SBATCH --ntasks=4
-#SBATCH --mem=5G
-#SBATCH --partition=slow
-#SBATCH --output=a6_heat_transfer_results.txt
-
-mpirun -n 4 ./floyd_distrib --inputFile=./input_graph/random_graph.txt --outputFile=./output_graph/random_graph_distrib_.txt
-
-```
