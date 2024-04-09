@@ -101,6 +101,9 @@ void distrib(std::string input_file_path, std::string output_file_path) {
                 }
             }
         }
+        if (k >= proc_start_col && k < proc_end_col) {
+            delete[] kth_column;
+        }
     }
     
     std::vector<std::vector<int>> combined;

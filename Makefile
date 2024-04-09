@@ -15,7 +15,7 @@ test_threaded: floyd_serial_threaded.cpp test_threaded.cpp utils.cpp graph.cpp
 	g++ $(CXXFLAGS) utils.cpp graph.cpp test_threaded.cpp floyd_serial_threaded.cpp -o test_threaded
 
 # Executable for running distribtued (MPI) version of floyd.
-floyd_distrib: floyd_serial_threaded.cpp driver_distrib.cpp utils.cpp graph.cpp
+floyd_distrib: floyd_distrib.cpp driver_distrib.cpp utils.cpp graph.cpp
 	mpic++ $(CXXFLAGS) \
 	driver_distrib.cpp utils.cpp graph.cpp floyd_distrib.cpp -o floyd_distrib
 
