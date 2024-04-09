@@ -74,14 +74,16 @@ void distrib(std::string input_file_path, std::string output_file_path) {
     }
     
     // Floyd algorithm:
-    int *kth_column = NULL;
+    int *kth_column = new int[num_verts];
     for (int k = 0; k < num_verts; k++) {
         // Check if kth column is in our proc_buffer:
         if (k >= proc_start_col &&  k < proc_end_col) {
-            kth_column = new int[num_verts];
             // Fill kth column from proc_buffer:
             for (int i = 0; i < num_verts; i++) {
                 kth_column[i] = proc_buffer[i * proc_width + (k - proc_start_col)];
+                // int d = proc_buffer[i * proc_width + (k - proc_start_col)];
+                // kth_column[i] = d;
+                // printf("proc %d puts %d into %d column\n", world_rank, d, k);
             }
         }
         // After bcast, all procs will have kth_column with same data.
@@ -101,11 +103,11 @@ void distrib(std::string input_file_path, std::string output_file_path) {
                 }
             }
         }
-        if (k >= proc_start_col && k < proc_end_col) {
-            delete[] kth_column;
-        }
+        MPI_Barrier(MPI_COMM_WORLD);
     }
-    
+    delete[] kth_column;
+    // Done Floyd algorithm.
+
     std::vector<std::vector<int>> combined;
     if (world_rank != 0) {
         // Done Floyd, send proc_buffer back to root.

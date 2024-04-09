@@ -8,5 +8,5 @@ Parallel all pairs shortest path algorithm
 ```
 make all
 ./floyd_serial_threaded --inputFile=./input_graph/random_graph.txt --outputFile=./output_graph/random_graph_serial_threaded.txt
-./floyd_distrib --inputFile=./input_graph/random_graph.txt --outputFile=./output_graph/random_graph_distrib_.txt
+mpirun -n 6 ./floyd_distrib --inputFile=./input_graph/random_graph.txt --outputFile=./output_graph/random_graph_distrib_.txt
 ```
