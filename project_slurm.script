@@ -1,0 +1,11 @@
+#!/bin/bash
+#
+#SBATCH --cpus-per-task=1
+#SBATCH --nodes=1
+#SBATCH --ntasks=6
+#SBATCH --mem=5G
+#SBATCH --partition=slow
+#SBATCH --output=project_result.txt
+
+mpirun -n 6 ./floyd_distrib --inputFile=./input_graph/random_graph_50.txt --outputFile=./output_graph/random_graph_distrib_50.txt
+
