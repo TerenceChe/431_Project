@@ -1,8 +1,12 @@
-#include "shortest_path_floyd.h"
+// Implementations of serial and threaded algorithms.
+
+#include "floyd_serial_threaded.h"
+#include "utils.h"
+#include <thread>
 
 void serial(Graph* g) {
     timer timer;
-    uint size = g->height;
+    uint size = g->getNumVerts();
 
     #ifdef PRINT
     std::cout << "graph before >>>> " << std::endl;
@@ -10,12 +14,9 @@ void serial(Graph* g) {
     #endif
 
     timer.start();
-    for (int k = 0; k < size; k++) {
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                // std::cout << "i: " << i << ", k: " << k << " is " << g->getWeight(i,k) << std::endl;
-                // std::cout << "k: " << k << ", j: " << j << " is " << g->getWeight(k,j) << std::endl;
-                // std::cout << "i: " << i << ", j: " << j << " is " << g->getWeight(i,j) << std::endl;
+    for (uint k = 0; k < size; k++) {
+        for (uint i = 0; i < size; i++) {
+            for (uint j = 0; j < size; j++) {
                 int new_weight = g->getWeight(i,k) + g->getWeight(k,j);
                 if (g->getWeight(i,k) != INT_MAX && g->getWeight(k,j) != INT_MAX && new_weight < g->getWeight(i,j)) {
                     g->setWeight(i,j, new_weight);
@@ -35,11 +36,11 @@ void serial(Graph* g) {
 void iterate(uint start_col, uint end_col, uint size, Graph *g, CustomBarrier *barrier, double *time_taken) {
     timer t1;
     t1.start();
-    for (int k = 0; k < size; k++) {
-        for (int i = 0; i < size; i++) {
-            for (int j = start_col; j < end_col; j++) {
-                // Infinite weight in one of the intermediate paths: not a real connection.
+    for (uint k = 0; k < size; k++) {
+        for (uint i = 0; i < size; i++) {
+            for (uint j = start_col; j < end_col; j++) {
                 if (g->getWeight(i,k) == INT_MAX || g->getWeight(k,j) == INT_MAX) {
+                    // Infinite weight in one of the intermediate paths: not a real connection.
                     continue;
                 }
                 int new_weight = g->getWeight(i,k) + g->getWeight(k,j);
@@ -63,25 +64,13 @@ void threaded(Graph *g, uint np) {
     #endif
     
     CustomBarrier barrier(np);
-    uint size = g->height;
-    uint col_per_thread = (uint) (size / np);
-    uint excess_cols = (uint) (size % np);
+    uint size = g->getNumVerts();
     double times[np] = { 0 };
-
     std::thread threads[np];
+    std::vector<int> col_bounds = get_col_bounds(size, np);
 
-    uint last_end = 0;
     for (uint i = 0; i < np; i++) {
-        uint start_col = last_end;
-        uint end_col = start_col + col_per_thread;
-        if (excess_cols > 0) {
-            end_col++;
-            excess_cols--;
-        }
-        last_end = end_col;
-
-        // std::printf("Start: %d, end: %d\n", start_col, end_col);
-        threads[i] = std::thread(iterate, start_col, end_col, size, g, &barrier, &times[i]);
+        threads[i] = std::thread(iterate, col_bounds[i], col_bounds[i + 1], size, g, &barrier, &times[i]);
     }
 
     for (uint i = 0; i < np; i++) {
@@ -96,7 +85,7 @@ void threaded(Graph *g, uint np) {
     #endif
 
     std::cout << "Time taken (in seconds) : \n" << std::setprecision(TIME_PRECISION);
-    for (int i = 0; i < np; i++) {
+    for (uint i = 0; i < np; i++) {
         std::cout << i << ": "  << times[i] << "\n";
     }
     std::cout << "Overall: " << overall_time << '\n';
