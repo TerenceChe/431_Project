@@ -47,7 +47,12 @@ sbatch project_slurm.script
 
 ## Verifying correctness of the program
 
-You must first complete the section `Running the program` so you can get the output file with the resulting matrix of all pairs shortest paths
+You must first complete the section `Running the program` so you can get the output file with the resulting matrix of all pairs shortest paths.
+
+Testing is done by comparing `output from the serial implementation` with `output file produced by complicated program`.
+
+So when you run the serial program on an input file and generate an output file, and then run (for example) the mpi program on an input file and generate an output file,
+those files should be identical.
 
 ```
 diff -w ./output_graph/random_graph_serial_1000.txt ./output_graph/random_graph_parallel_1000.txt
@@ -56,4 +61,3 @@ diff -w ./output_graph/random_graph_serial_1000.txt ./output_graph/random_graph_
 
 # there shouldn't be any diffs when you run the 2 commands above which shows to you that the programs are generating correct results
 ```
-
