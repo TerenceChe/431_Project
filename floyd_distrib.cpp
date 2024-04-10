@@ -12,6 +12,17 @@
 #include "utils.h"
 #include "floyd_distrib.h"
 
+int get_broadcaster(std::vector<int> col_bounds, int k) {
+    uint i;
+    for (i = 1; i < col_bounds.size(); i++) {
+        int end_col = col_bounds[i];
+        if (k < end_col) {
+            break;
+        }
+    }
+    return i - 1;
+}
+
 void distrib(std::string input_file_path, std::string output_file_path) {
     MPI_Init(NULL, NULL);
 
@@ -74,18 +85,20 @@ void distrib(std::string input_file_path, std::string output_file_path) {
     }
     
     // Floyd algorithm:
-    int *kth_column = NULL;
+    int *kth_column = new int[num_verts];
     for (int k = 0; k < num_verts; k++) {
-        // Check if kth column is in our proc_buffer:
-        if (k >= proc_start_col &&  k < proc_end_col) {
-            kth_column = new int[num_verts];
+        int broadcaster_rank = get_broadcaster(col_bounds, k);
+        if (world_rank == broadcaster_rank) {
             // Fill kth column from proc_buffer:
             for (int i = 0; i < num_verts; i++) {
                 kth_column[i] = proc_buffer[i * proc_width + (k - proc_start_col)];
+                // int d = proc_buffer[i * proc_width + (k - proc_start_col)];
+                // kth_column[i] = d;
+                // printf("proc %d puts %d into %d column\n", world_rank, d, k);
             }
         }
         // After bcast, all procs will have kth_column with same data.
-        MPI_Bcast(kth_column, num_verts, MPI_INT, world_rank, MPI_COMM_WORLD);
+        MPI_Bcast(kth_column, num_verts, MPI_INT, broadcaster_rank, MPI_COMM_WORLD);
         for (int i = 0; i < num_verts; i++) {
             for (int j = 0; j < proc_width; j++) {
                 int dist_to_k = kth_column[i];
@@ -98,14 +111,30 @@ void distrib(std::string input_file_path, std::string output_file_path) {
                 int old_dist = proc_buffer[i * proc_width + j];
                 if (new_dist < old_dist) {
                     proc_buffer[i * proc_width + j] = new_dist;
+                    // printf("i=%d, j=%d, k=%d, distto=%d, distfrom=%d\n", i, j + proc_start_col, k, dist_to_k, dist_from_k);
+                    // fflush(stdout);
                 }
             }
         }
-        if (k >= proc_start_col && k < proc_end_col) {
-            delete[] kth_column;
-        }
+        // MPI_Barrier(MPI_COMM_WORLD);
+        // std::printf("k = %d\n", k);
+        // std::printf("proc_buffer\n");
+        // for (int i = 0; i < num_verts; i++) {
+        //     for (int j = 0; j < proc_width; j++) {
+        //         std::printf("%d ", proc_buffer[i * proc_width + j]);
+        //     }
+        //     std::printf("\n");
+        // }
+        // std::printf("kth column\n");
+        // for (int i = 0; i < num_verts; i++) {
+        //     std::printf("%d ", kth_column[i]);
+        // }
+        // std::printf("\n---\n");
+        MPI_Barrier(MPI_COMM_WORLD);
     }
-    
+    delete[] kth_column;
+    // Done Floyd algorithm.
+
     std::vector<std::vector<int>> combined;
     if (world_rank != 0) {
         // Done Floyd, send proc_buffer back to root.
