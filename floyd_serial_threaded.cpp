@@ -4,6 +4,7 @@
 #include "utils.h"
 #include <thread>
 
+
 void serial(Graph* g) {
     timer timer;
     uint size = g->getNumVerts();
@@ -27,6 +28,8 @@ void serial(Graph* g) {
     std::cout << "Time taken (in seconds) : " << std::setprecision(TIME_PRECISION)
             << timer.stop() << "\n";
     
+    g->printDistance();
+
     #ifdef PRINT
     std::cout << "graph after >>>> " << std::endl;
     g->printGraph();
@@ -65,7 +68,7 @@ void threaded(Graph *g, uint np) {
     
     CustomBarrier barrier(np);
     uint size = g->getNumVerts();
-    double times[np] = { 0 };
+    double* times = new double[np];
     std::thread threads[np];
     std::vector<int> col_bounds = get_col_bounds(size, np);
 
@@ -89,4 +92,8 @@ void threaded(Graph *g, uint np) {
         std::cout << i << ": "  << times[i] << "\n";
     }
     std::cout << "Overall: " << overall_time << '\n';
+
+    g->printDistance();
+
+    delete[] times;
 }

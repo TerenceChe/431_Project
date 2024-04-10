@@ -1,4 +1,5 @@
 #include "graph.h"
+#include <random>
 
 uint Graph::getNumVerts() const {
     return num_verts;
@@ -38,6 +39,29 @@ bool Graph::operator==(const Graph& other) const {
         }
         std::cout << std::endl;
     } 
+}
+
+void Graph::printDistance() const {
+    
+    int dataPairCount = 6;
+    std::vector<std::pair<int, int>> partitions(dataPairCount);
+
+    int verticesPerThread = getNumVerts() / dataPairCount;
+    int remainder = getNumVerts() % dataPairCount;
+
+    int startVertex = 0;
+    for (int i = 0; i < dataPairCount; ++i) {
+        int v = verticesPerThread + (i < remainder ? 1 : 0);
+        int endVertex = startVertex + v - 1;
+        partitions[i] = std::make_pair(startVertex, endVertex);
+        startVertex = endVertex + 1;
+    }
+
+    std::cout << "from, to, distance" << std::endl;
+    for (auto pair : partitions) {
+        std::cout << pair.first << ", " << pair.second << ", " << getWeight(pair.first, pair.second) << std::endl;
+    }
+
 }
 
 void Graph::readGraphFromFile(std::string input_file_path) {

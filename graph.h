@@ -23,6 +23,7 @@ public:
     void printGraph() const;
     void readGraphFromFile(std::string input_file_path);
     void writeGraphToFile(std::string filename) const;
+    void printDistance() const;
 };
 
 #endif
