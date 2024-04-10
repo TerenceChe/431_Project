@@ -49,7 +49,7 @@ sbatch project_slurm.script
 
 You must first complete the section `Running the program` so you can get the output file with the resulting matrix of all pairs shortest paths.
 
-Testing is done by comparing `output from the serial implementation` with `output file produced by complicated program`.
+Testing is done by comparing *output from the serial implementation* with *output file produced by complicated program*.
 
 So when you run the serial program on an input file and generate an output file, and then run (for example) the mpi program on an input file and generate an output file,
 those files should be identical.
