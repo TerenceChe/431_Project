@@ -203,5 +203,7 @@ void distrib(std::string input_file_path, std::string output_file_path) {
         delete graph;
     }
     delete[] proc_buffer;
+    
+    MPI_Barrier(MPI_COMM_WORLD);
     MPI_Finalize();
 }
