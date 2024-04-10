@@ -12,6 +12,17 @@
 #include "utils.h"
 #include "floyd_distrib.h"
 
+template <typename T>
+T get_max(const T* ar, size_t arlen) {
+    T max = ar[0];
+    for (size_t i = 1; i < arlen; ++i) {
+        if (ar[i] > max) {
+            max = ar[i];
+        }
+    }
+    return max;
+}
+
 // Return broadcaster process rank for a certain k (it has column k in its proc_buffer).
 int get_broadcaster(std::vector<int> col_bounds, int k) {
     uint i;
@@ -34,7 +45,7 @@ void distrib(std::string input_file_path, std::string output_file_path) {
     
     int num_verts = 0;
     Graph *graph = NULL;
-    double root_start_time;
+    double root_start_time = -1;
     double *proc_times = NULL;
     if (world_rank == 0) {
         graph = new Graph();
@@ -178,11 +189,12 @@ void distrib(std::string input_file_path, std::string output_file_path) {
     // Root prints all times and writes `combined` to file.
     if (world_rank == 0) {
         double root_stop_time = MPI_Wtime();
-        std::cout << "Time taken (in seconds) : \n" << std::setprecision(TIME_PRECISION);
+        std::cout << "Time taken (in seconds):\n" << std::setprecision(TIME_PRECISION);
         for (int proc_rank = 0; proc_rank < world_size; proc_rank++) {
             std::cout << proc_rank << ": "  << proc_times[proc_rank] << "\n";
         }
         std::cout << "Overall: " << root_stop_time - root_start_time << "\n";
+        std::cout << "Max time: " << get_max(proc_times, (size_t)world_size) << "\n";
         graph_vector_to_file(combined, output_file_path);
         delete graph;
     }
