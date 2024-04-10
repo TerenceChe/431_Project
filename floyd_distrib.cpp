@@ -34,19 +34,17 @@ void distrib(std::string input_file_path, std::string output_file_path) {
     
     int num_verts = 0;
     Graph *graph = NULL;
-
-    timer root_timer;
+    double root_start_time;
     double *proc_times = NULL;
     if (world_rank == 0) {
         graph = new Graph();
         graph->readGraphFromFile(input_file_path);
         num_verts = graph->getNumVerts();
         proc_times = new double[world_rank];
-        root_timer.start();
+        root_start_time = MPI_Wtime();
     }
-    
-    timer proc_timer;
-    proc_timer.start();
+
+    double proc_start_time = MPI_Wtime();
 
     MPI_Bcast(&num_verts, 1, MPI_INT, 0, MPI_COMM_WORLD);
     std::vector<int> col_bounds = get_col_bounds(num_verts, world_size);
@@ -173,17 +171,18 @@ void distrib(std::string input_file_path, std::string output_file_path) {
         delete[] recv_buffer;
     }
 
-    double proc_time = proc_timer.stop();
+    double proc_time = MPI_Wtime() - proc_start_time;
+
     MPI_Gather(&proc_time, 1, MPI_DOUBLE, proc_times, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
     
     // Root prints all times and writes `combined` to file.
     if (world_rank == 0) {
-        double root_time = root_timer.stop();
+        double root_stop_time = MPI_Wtime();
         std::cout << "Time taken (in seconds) : \n" << std::setprecision(TIME_PRECISION);
         for (int proc_rank = 0; proc_rank < world_size; proc_rank++) {
             std::cout << proc_rank << ": "  << proc_times[proc_rank] << "\n";
         }
-        std::cout << "Overall: " << root_time << "\n";
+        std::cout << "Overall: " << root_stop_time - root_start_time << "\n";
         graph_vector_to_file(combined, output_file_path);
         delete graph;
     }
