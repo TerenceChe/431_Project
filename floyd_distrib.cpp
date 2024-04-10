@@ -149,14 +149,11 @@ void distrib(std::string input_file_path, std::string output_file_path) {
         // Recv proc_buffer, combine proc_buffers into `combined`.
         combined.resize(num_verts, std::vector<int>(num_verts));
         // Write proc 0 data into combined:
-        int start_col = col_bounds[0];
-        int end_col = col_bounds[1];
-        int width = end_col - start_col;
+        int end_col_0 = col_bounds[1];
         for (int i = 0; i < num_verts; i++) {
-            for (int j = 0; j < width; j++) {
-                int weight = proc_buffer[i * width + j];
-                int j_combined = start_col + j;
-                combined[i][j_combined] = weight;
+            for (int j = 0; j < end_col_0; j++) {
+                int weight = proc_buffer[i * end_col_0 + j];
+                combined[i][j] = weight;
             }
         }
 
@@ -168,17 +165,17 @@ void distrib(std::string input_file_path, std::string output_file_path) {
             // How many ints to receive:
             int start_col = col_bounds[send_proc];
             int end_col = col_bounds[send_proc + 1];
-            int buffer_len = (end_col - start_col) * num_verts;
+            int width = end_col - start_col;
+            int buffer_len = width * num_verts;
 
             MPI_Recv(recv_buffer, buffer_len, MPI_INT, send_proc, 
                 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
             
             // Copy data from recv_buffer into `combined`:
             // Zigzag through the buffer:
-            int recv_buffer_width = end_col - start_col;
             for (int i = 0; i < num_verts; i++) {
-                for (int j = 0; j < recv_buffer_width; j++) {
-                    int weight = recv_buffer[i * recv_buffer_width + j];
+                for (int j = 0; j < width; j++) {
+                    int weight = recv_buffer[i * width + j];
                     int j_combined = start_col + j;
                     combined[i][j_combined] = weight;
                 }
@@ -202,6 +199,7 @@ void distrib(std::string input_file_path, std::string output_file_path) {
         std::cout << "Overall: " << root_stop_time - root_start_time << "\n";
         std::cout << "Max time: " << get_max(proc_times, (size_t)world_size) << "\n";
         graph_vector_to_file(combined, output_file_path);
+        delete[] proc_times;
         delete graph;
     }
     delete[] proc_buffer;
