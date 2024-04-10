@@ -52,12 +52,12 @@ void distrib(std::string input_file_path, std::string output_file_path) {
         graph->readGraphFromFile(input_file_path);
         num_verts = graph->getNumVerts();
         if (world_size > num_verts) {
-            std::cerr << "Too many processes for this graph.\n";
+            std::cerr << "Too many processes for this graph. ABORTING.\n";
             MPI_Abort(MPI_COMM_WORLD, 1);
         } else {
             printf("Num verts %d\n", num_verts);
         }
-        proc_times = new double[world_rank];
+        proc_times = new double[world_size];
         root_start_time = MPI_Wtime();
     }
 

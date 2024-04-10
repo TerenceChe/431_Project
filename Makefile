@@ -1,4 +1,4 @@
-CXXFLAGS = -std=c++14 -O3 -pthread -Wall -g
+CXXFLAGS = -std=c++14 -O3 -pthread -Wall -g 
 
 .PHONY : clean
 
