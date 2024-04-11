@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
                 "./input_graph/test_data_1.txt")},
             {"outputFile", "Output graph file path",
                 cxxopts::value<std::string>()->default_value(
-                "./output_graph/test_data_1_serial_threaded.txt")},
+                "./distance_matrix/test_data_1_serial_threaded.txt")},
         });
 
     std::map<uint, std::string> mode_map = {

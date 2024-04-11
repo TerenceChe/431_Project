@@ -87,7 +87,7 @@ void threaded(Graph *g, uint np) {
     g->printGraph();
     #endif
 
-    std::cout << "Time taken (in seconds) : \n" << std::setprecision(TIME_PRECISION);
+    std::cout << "Time taken (in seconds):\n" << std::setprecision(TIME_PRECISION);
     for (uint i = 0; i < np; i++) {
         std::cout << i << ": "  << times[i] << "\n";
     }

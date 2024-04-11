@@ -34,6 +34,6 @@ floyd_serial_threaded
 test_threaded
 floyd_distrib
 distributed_graph_edit
+print_shortest_path
 
 .vscode
-output_graph/*
