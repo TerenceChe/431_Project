@@ -44,10 +44,16 @@ bool Graph::operator==(const Graph& other) const {
 void Graph::printDistance() const {
     
     int dataPairCount = 6;
-    std::vector<std::pair<int, int>> partitions(dataPairCount);
+    int totalVertices = getNumVerts();
 
-    int verticesPerThread = getNumVerts() / dataPairCount;
-    int remainder = getNumVerts() % dataPairCount;
+    if (totalVertices < (dataPairCount * 2)) {
+        std::cout << "I am not printing results for matrix that is too small" << std::endl;
+        return;
+    }
+
+     int verticesPerThread = totalVertices / dataPairCount;
+    int remainder = totalVertices % dataPairCount;
+    std::vector<std::pair<int, int>> partitions(dataPairCount);
 
     int startVertex = 0;
     for (int i = 0; i < dataPairCount; ++i) {
@@ -59,7 +65,12 @@ void Graph::printDistance() const {
 
     std::cout << "from, to, distance" << std::endl;
     for (auto pair : partitions) {
-        std::cout << pair.first << ", " << pair.second << ", " << getWeight(pair.first, pair.second) << std::endl;
+        int weight = getWeight(pair.first, pair.second);
+        if (weight == INT_MAX) {
+            std::cout << pair.first << ", " << pair.second << ", " << "infinity" << std::endl;
+        } else {
+            std::cout << pair.first << ", " << pair.second << ", " << weight << std::endl;
+        }
     }
 
 }

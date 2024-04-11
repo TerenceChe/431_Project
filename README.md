@@ -28,7 +28,12 @@ We assume you will be running these commands at the root of your directory, if y
 # this is needed so that output files can write to this directory
 mkdir -p distance_matrix
 
+# if you don't wish to print the before and after results of the distance
 make all
+
+# if you want to print the before and after result of the distances for easy verification of correctness
+
+make PRINT=1
 
 # running the serial version using random_graph_1000.txt
 

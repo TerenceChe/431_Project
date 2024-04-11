@@ -43,7 +43,8 @@ int main(int argc, char *argv[]) {
     }
 
     if (mode > 0 && np < 2) {
-        std::cout << "for thread and MPI mode, you must have n > 1" << std::endl;
+        std::cout << "for thread mode, you must have n > 1" << std::endl;
+        return 1;
     }
 
     Graph g; 
@@ -54,6 +55,7 @@ int main(int argc, char *argv[]) {
     }
 
     std::cout << "Number of Threads/Processes : " << np << std::endl;
+    std::cout << "Number of Vertices : " << g.getNumVerts() << std::endl;
     std::cout << "Mode : " << mode_map[mode] << std::endl;
 
     if (mode == 0) {
