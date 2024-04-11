@@ -23,4 +23,4 @@ print_shortest_path: print_shortest_path.cpp graph.cpp utils.cpp
 	g++ $(CXXFLAGS) print_shortest_path.cpp graph.cpp utils.cpp -o print_shortest_path
 
 clean :
-	rm floyd_serial_threaded test_threaded floyd_distrib output_graph/*
+	rm floyd_serial_threaded test_threaded floyd_distrib

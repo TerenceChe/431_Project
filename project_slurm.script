@@ -7,5 +7,5 @@
 #SBATCH --partition=slow
 #SBATCH --output=project_result.txt
 
-mpirun -n 4 ./floyd_distrib --inputFile=./input_graph/random_graph_1000.txt --outputFile=./output_graph/random_graph_distrib_1000.txt
+mpirun -n 4 ./floyd_distrib --inputFile=./input_graph/random_graph_1000.txt --outputFile=./distance_matrix/random_graph_distrib_1000.txt
 

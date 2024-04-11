@@ -26,17 +26,17 @@ We assume you will be running these commands at the root of your directory, if y
 
 ```
 # this is needed so that output files can write to this directory
-mkdir -p output_graph
+mkdir -p distance_matrix
 
 make all
 
 # running the serial version using random_graph_1000.txt
 
-./floyd_serial_threaded --mode 0 --inputFile=./input_graph/random_graph_1000.txt --outputFile=./output_graph/random_graph_serial_1000.txt
+./floyd_serial_threaded --mode 0 --inputFile=./input_graph/random_graph_1000.txt --outputFile=./distance_matrix/random_graph_serial_1000.txt
 
 # running the parallel version using random_graph_1000.txt with 4 threads
 
-./floyd_serial_threaded --np 4 --mode 1 --inputFile=./input_graph/random_graph_1000.txt --outputFile=./output_graph/random_graph_parallel_1000.txt
+./floyd_serial_threaded --np 4 --mode 1 --inputFile=./input_graph/random_graph_1000.txt --outputFile=./distance_matrix/random_graph_parallel_1000.txt
 
 # running the distributed version of the program, you will need to submit the slurm script we provided
 # we have set up the slurm script to run on 4 processes, and using the same input data of 1000 nodes
@@ -46,7 +46,7 @@ sbatch project_slurm.script
 # Once you have generated the file which contains the distance matrix, you can print out the actual shortest path between any pair of vertices.
 # E.g. between start=3, end=2:
 
-./print_shortest_path --graph=./input_graph/random_graph_1000.txt --distances=./output_graph/random_graph_parallel_1000.txt --start=3 --end=2
+./print_shortest_path --graph=./input_graph/random_graph_1000.txt --distances=./distance_matrix/random_graph_parallel_1000.txt --start=3 --end=2
 ```
 
 ## Verifying correctness of the program
@@ -59,9 +59,9 @@ So when you run the serial program on an input file and generate an output file,
 those files should be identical.
 
 ```
-diff -w ./output_graph/random_graph_serial_1000.txt ./output_graph/random_graph_parallel_1000.txt
+diff -w ./distance_matrix/random_graph_serial_1000.txt ./distance_matrix/random_graph_parallel_1000.txt
 
-diff -w ./output_graph/random_graph_serial_1000.txt ./output_graph/random_graph_distrib_1000.txt
+diff -w ./distance_matrix/random_graph_serial_1000.txt ./distance_matrix/random_graph_distrib_1000.txt
 
 # there shouldn't be any diffs when you run the 2 commands above which shows to you that the programs are generating correct results
 ```
