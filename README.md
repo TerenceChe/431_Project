@@ -43,6 +43,10 @@ make all
 
 sbatch project_slurm.script
 
+# Once you have generated the file which contains the distance matrix, you can print out the actual shortest path between any pair of vertices.
+# E.g. between start=3, end=2:
+
+./print_shortest_path --graph=./input_graph/random_graph_1000.txt --distances=./output_graph/random_graph_parallel_1000.txt --start=3 --end=2
 ```
 
 ## Verifying correctness of the program
