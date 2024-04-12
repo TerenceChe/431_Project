@@ -24,6 +24,7 @@ public:
     void readGraphFromFile(std::string input_file_path);
     void writeGraphToFile(std::string filename) const;
     void printDistance() const;
+    void setMatrix(std::vector<std::vector<int>> matrix);
 };
 
 #endif

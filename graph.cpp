@@ -41,6 +41,10 @@ bool Graph::operator==(const Graph& other) const {
     } 
 }
 
+void Graph::setMatrix(std::vector<std::vector<int>> m) {
+    this->matrix = m;
+}
+
 void Graph::printDistance() const {
     
     int dataPairCount = 6;

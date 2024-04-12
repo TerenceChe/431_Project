@@ -10,7 +10,7 @@ void serial(Graph* g) {
     uint size = g->getNumVerts();
 
     #ifdef PRINT
-    std::cout << "distance before >>>> " << std::endl;
+    std::cout << "<<<< distance before >>>> " << std::endl;
     g->printDistance();
     #endif
 
@@ -25,13 +25,15 @@ void serial(Graph* g) {
             }
         }
     }
+
+    #ifdef PRINT
+    std::cout << "<<<< distance after >>>> " << std::endl;
+    g->printDistance();
+    #endif
+
     std::cout << "Time taken (in seconds) : " << std::setprecision(TIME_PRECISION)
             << timer.stop() << "\n";
 
-    #ifdef PRINT
-    std::cout << "distance after >>>> " << std::endl;
-    g->printDistance();
-    #endif
 }
 
 void iterate(uint start_col, uint end_col, uint size, Graph *g, CustomBarrier *barrier, double *time_taken) {
@@ -60,7 +62,7 @@ void threaded(Graph *g, uint np) {
     t1.start();
 
     #ifdef PRINT
-    std::cout << "distance before >>>> " << std::endl;
+    std::cout << "<<<< distance before >>>> " << std::endl;
     g->printDistance();
     #endif
     
@@ -81,7 +83,7 @@ void threaded(Graph *g, uint np) {
     double overall_time = t1.stop();
 
     #ifdef PRINT
-    std::cout << "distance after >>>> " << std::endl;
+    std::cout << "<<<< distance after >>>> " << std::endl;
     g->printDistance();
     #endif
 

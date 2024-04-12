@@ -45,7 +45,6 @@ void distrib(std::string input_file_path, std::string output_file_path) {
     
     int num_verts = 0;
     Graph *graph = NULL;
-    double root_start_time = -1;
     double *proc_times = NULL;
     if (world_rank == 0) {
         graph = new Graph();
@@ -55,10 +54,16 @@ void distrib(std::string input_file_path, std::string output_file_path) {
             std::cerr << "Too many processes for this graph. ABORTING.\n";
             MPI_Abort(MPI_COMM_WORLD, 1);
         } else {
-            printf("Num verts %d\n", num_verts);
+            printf("Number of Processes : %d\n", world_size);
+            printf("Number of Vertices : %d\n", num_verts);
+            printf("Mode : distributed\n");
+            #ifdef PRINT
+            std::cout << "<<<< distance before >>>> " << std::endl;
+            graph->printDistance();
+            #endif
+    
         }
         proc_times = new double[world_size];
-        root_start_time = MPI_Wtime();
     }
 
     double proc_start_time = MPI_Wtime();
@@ -191,14 +196,19 @@ void distrib(std::string input_file_path, std::string output_file_path) {
     
     // Root prints all times and writes `combined` to file.
     if (world_rank == 0) {
-        double root_stop_time = MPI_Wtime();
+        
+        #ifdef PRINT
+        std::cout << "<<<< distance after >>>> " << std::endl;
+        graph->setMatrix(combined);
+        graph->printDistance();
+        #endif
         std::cout << "Time taken (in seconds):\n" << std::setprecision(TIME_PRECISION);
         for (int proc_rank = 0; proc_rank < world_size; proc_rank++) {
             std::cout << proc_rank << ": "  << proc_times[proc_rank] << "\n";
         }
-        std::cout << "Overall: " << root_stop_time - root_start_time << "\n";
         std::cout << "Max time: " << get_max(proc_times, (size_t)world_size) << "\n";
         graph_vector_to_file(combined, output_file_path);
+
         delete[] proc_times;
         delete graph;
     }

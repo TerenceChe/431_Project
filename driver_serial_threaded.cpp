@@ -54,7 +54,7 @@ int main(int argc, char *argv[]) {
         np = 1;
     }
 
-    std::cout << "Number of Threads/Processes : " << np << std::endl;
+    std::cout << "Number of Threads : " << np << std::endl;
     std::cout << "Number of Vertices : " << g.getNumVerts() << std::endl;
     std::cout << "Mode : " << mode_map[mode] << std::endl;
 
