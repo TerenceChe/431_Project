@@ -38,12 +38,13 @@ int main(int argc, char *argv[]) {
     std::string output_file_path = cl_options["outputFile"].as<std::string>();
 
     if (mode < 0 || mode > 1) {
-        std::cout << "invalid mode" << std::endl;
+        std::cerr << "invalid mode" << std::endl;
         return 1;
     }
 
     if (mode > 0 && np < 2) {
-        std::cout << "for thread and MPI mode, you must have n > 1" << std::endl;
+        std::cerr << "for thread mode, you must have n > 1" << std::endl;
+        return 1;
     }
 
     Graph g; 
@@ -53,7 +54,8 @@ int main(int argc, char *argv[]) {
         np = 1;
     }
 
-    std::cout << "Number of Threads/Processes : " << np << std::endl;
+    std::cout << "Number of Threads : " << np << std::endl;
+    std::cout << "Number of Vertices : " << g.getNumVerts() << std::endl;
     std::cout << "Mode : " << mode_map[mode] << std::endl;
 
     if (mode == 0) {

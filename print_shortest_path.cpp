@@ -1,15 +1,15 @@
 #include "graph.h"
 
-int get_next_node(int current_node, int end_node, const Graph &graph, const Graph &distances) {
+uint get_next_node(uint current_node, int end_node, const Graph &graph, const Graph &distances) {
     std::vector<int> adjs;
-    for (int node = 0; node < graph.getNumVerts(); node++) {
+    for (uint node = 0; node < graph.getNumVerts(); node++) {
         if (graph.getWeight(current_node, node) != INT_MAX && node != current_node) {
             adjs.push_back(node);
         }
     }
     // From the nodes that connect to current node, which one is the closest to start_node?
     int closest_distance = INT_MAX;
-    int closest_node;
+    uint closest_node = 0;
     for (int adj : adjs) {
         int current_distance = graph.getWeight(current_node, adj) + distances.getWeight(adj, end_node);
         if (current_distance < closest_distance) {
@@ -49,7 +49,7 @@ int main(int argc, char *argv[]) {
     Graph graph;
     graph.readGraphFromFile(graph_file);
     
-    int num_verts = graph.getNumVerts();
+    uint num_verts = graph.getNumVerts();
     if (start_node >= num_verts || end_node >= num_verts) {
         std::cerr << "Invalid start or end node. ABORTING.\n";
         return 1;
@@ -65,9 +65,9 @@ int main(int argc, char *argv[]) {
 
     std::vector<int> shortest_path;
     shortest_path.push_back(start_node);
-    int current_node = start_node;
+    uint current_node = start_node;
 
-    int shortest_path_distance = distances.getWeight(start_node, end_node);
+    uint shortest_path_distance = distances.getWeight(start_node, end_node);
     if (shortest_path_distance == INT_MAX) {
         std::printf("There is no path from %d to %d.\n", start_node, end_node);
     }
@@ -83,7 +83,7 @@ int main(int argc, char *argv[]) {
         start_node, 
         end_node);
     
-    for (int i = 0; i < shortest_path.size(); i++) {
+    for (uint i = 0; i < shortest_path.size(); i++) {
         std::printf("%d", shortest_path[i]);
         if (i != shortest_path.size() - 1) {
             std::printf(" -> ");

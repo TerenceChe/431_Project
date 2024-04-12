@@ -28,6 +28,13 @@ We assume you will be running these commands at the root of your directory, if y
 # this is needed so that output files can write to this directory
 mkdir -p distance_matrix
 
+# if you want to print the before and after shortest distance on a selected set of vertices to verify correctness you can use this when building the executables
+# we've built into the system to print 6 sets of vertices only so you can compare serial, parallel and distributed versions for correctness
+
+make PRINT=1
+
+# if you don't want to see the distances of 6 sets of vertices as part of your output, just run this to build the executables
+
 make all
 
 # running the serial version using random_graph_1000.txt
@@ -50,6 +57,8 @@ sbatch project_slurm.script
 ```
 
 ## Verifying correctness of the program
+
+With the `make PRINT=1` option, you will only get a selected set of vertices to make checking for correctness visually easier, but if you want to make sure the entire distance matrix result is correct, you can use the `diff` tool
 
 You must first complete the section `Running the program` so you can get the output file with the resulting matrix of all pairs shortest paths.
 

@@ -4,13 +4,14 @@
 #include "utils.h"
 #include <thread>
 
+
 void serial(Graph* g) {
     timer timer;
     uint size = g->getNumVerts();
 
     #ifdef PRINT
-    std::cout << "graph before >>>> " << std::endl;
-    g->printGraph();
+    std::cout << "<<<< distance before >>>> " << std::endl;
+    g->printDistance();
     #endif
 
     timer.start();
@@ -24,13 +25,15 @@ void serial(Graph* g) {
             }
         }
     }
+
+    #ifdef PRINT
+    std::cout << "<<<< distance after >>>> " << std::endl;
+    g->printDistance();
+    #endif
+
     std::cout << "Time taken (in seconds) : " << std::setprecision(TIME_PRECISION)
             << timer.stop() << "\n";
-    
-    #ifdef PRINT
-    std::cout << "graph after >>>> " << std::endl;
-    g->printGraph();
-    #endif
+
 }
 
 void iterate(uint start_col, uint end_col, uint size, Graph *g, CustomBarrier *barrier, double *time_taken) {
@@ -55,17 +58,23 @@ void iterate(uint start_col, uint end_col, uint size, Graph *g, CustomBarrier *b
 }
 
 void threaded(Graph *g, uint np) {
+
+    if (g->getNumVerts() < np) {
+         std::cerr << "Too many processes for this graph. ABORTING.\n";
+         exit(1);
+    }
+    
     timer t1;
     t1.start();
 
     #ifdef PRINT
-    std::cout << "graph before >>>> " << std::endl;
-    g->printGraph();
+    std::cout << "<<<< distance before >>>> " << std::endl;
+    g->printDistance();
     #endif
     
     CustomBarrier barrier(np);
     uint size = g->getNumVerts();
-    double times[np] = { 0 };
+    double* times = new double[np];
     std::thread threads[np];
     std::vector<int> col_bounds = get_col_bounds(size, np);
 
@@ -80,8 +89,8 @@ void threaded(Graph *g, uint np) {
     double overall_time = t1.stop();
 
     #ifdef PRINT
-    std::cout << "graph after >>>> " << std::endl;
-    g->printGraph();
+    std::cout << "<<<< distance after >>>> " << std::endl;
+    g->printDistance();
     #endif
 
     std::cout << "Time taken (in seconds):\n" << std::setprecision(TIME_PRECISION);
@@ -89,4 +98,5 @@ void threaded(Graph *g, uint np) {
         std::cout << i << ": "  << times[i] << "\n";
     }
     std::cout << "Overall: " << overall_time << '\n';
+    delete[] times;
 }

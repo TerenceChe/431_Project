@@ -1,0 +1,21 @@
+#! /bin/bash
+
+#SBATCH --cpus-per-task=6
+#SBATCH --time=10:00
+#SBATCH --mem=2G
+#SBATCH --partition=slow
+#SBATCH --output=parallel_data.txt
+
+srun ./floyd_serial_threaded --np 6 --mode 1 --inputFile=./input_graph/random_graph_50.txt --outputFile=./distance_matrix/random_graph_parallel_50.txt
+
+srun ./floyd_serial_threaded --np 6 --mode 1 --inputFile=./input_graph/random_graph_100.txt --outputFile=./distance_matrix/random_graph_parallel_100.txt
+
+srun ./floyd_serial_threaded --np 6 --mode 1 --inputFile=./input_graph/random_graph_200.txt --outputFile=./distance_matrix/random_graph_parallel_200.txt
+
+srun ./floyd_serial_threaded --np 6 --mode 1 --inputFile=./input_graph/random_graph_500.txt --outputFile=./distance_matrix/random_graph_parallel_500.txt
+
+srun ./floyd_serial_threaded --np 6 --mode 1 --inputFile=./input_graph/random_graph_1000.txt --outputFile=./distance_matrix/random_graph_parallel_1000.txt
+
+srun ./floyd_serial_threaded --np 6 --mode 1 --inputFile=./input_graph/random_graph_2000.txt --outputFile=./distance_matrix/random_graph_parallel_2000.txt
+
+srun ./floyd_serial_threaded --np 6 --mode 1 --inputFile=./input_graph/random_graph_3000.txt --outputFile=./distance_matrix/random_graph_parallel_3000.txt
