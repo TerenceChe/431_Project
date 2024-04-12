@@ -1,0 +1,21 @@
+#! /bin/bash
+
+#SBATCH --cpus-per-task=1
+#SBATCH --time=10:00
+#SBATCH --mem=2G
+#SBATCH --partition=slow
+#SBATCH --output=serial_data.txt
+
+srun ./floyd_serial_threaded --mode 0 --inputFile=./input_graph/random_graph_50.txt --outputFile=./distance_matrix/random_graph_serial_50.txt
+
+srun ./floyd_serial_threaded --mode 0 --inputFile=./input_graph/random_graph_100.txt --outputFile=./distance_matrix/random_graph_serial_100.txt
+
+srun ./floyd_serial_threaded --mode 0 --inputFile=./input_graph/random_graph_200.txt --outputFile=./distance_matrix/random_graph_serial_200.txt
+
+srun ./floyd_serial_threaded --mode 0 --inputFile=./input_graph/random_graph_500.txt --outputFile=./distance_matrix/random_graph_serial_500.txt
+
+srun ./floyd_serial_threaded --mode 0 --inputFile=./input_graph/random_graph_1000.txt --outputFile=./distance_matrix/random_graph_serial_1000.txt
+
+srun ./floyd_serial_threaded --mode 0 --inputFile=./input_graph/random_graph_2000.txt --outputFile=./distance_matrix/random_graph_serial_2000.txt
+
+srun ./floyd_serial_threaded --mode 0 --inputFile=./input_graph/random_graph_3000.txt --outputFile=./distance_matrix/random_graph_serial_3000.txt
