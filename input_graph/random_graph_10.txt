@@ -1,0 +1,10 @@
+0 i i i i 534 i i i 1 
+260 0 i i 628 i i 416 i i 
+i i 0 783 i i i 527 i 9 
+i i i 0 i i i 897 950 180 
+i i i i 0 i 826 i 447 253 
+i i i 532 285 0 i 806 i 617 
+i i 445 i i 167 0 i i i 
+i 414 i i 96 i i 0 i i 
+673 i 64 i i 933 i i 0 i 
+i 179 i 387 i i i i 531 0 

@@ -58,6 +58,12 @@ void iterate(uint start_col, uint end_col, uint size, Graph *g, CustomBarrier *b
 }
 
 void threaded(Graph *g, uint np) {
+
+    if (g->getNumVerts() < np) {
+         std::cerr << "Too many processes for this graph. ABORTING.\n";
+         exit(1);
+    }
+    
     timer t1;
     t1.start();
 

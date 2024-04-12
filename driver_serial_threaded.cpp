@@ -38,12 +38,12 @@ int main(int argc, char *argv[]) {
     std::string output_file_path = cl_options["outputFile"].as<std::string>();
 
     if (mode < 0 || mode > 1) {
-        std::cout << "invalid mode" << std::endl;
+        std::cerr << "invalid mode" << std::endl;
         return 1;
     }
 
     if (mode > 0 && np < 2) {
-        std::cout << "for thread mode, you must have n > 1" << std::endl;
+        std::cerr << "for thread mode, you must have n > 1" << std::endl;
         return 1;
     }
 
